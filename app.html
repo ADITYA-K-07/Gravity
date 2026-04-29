@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gravity Fitness Club — Pune's Premier Gym Since 2010</title>
+  <meta name="description" content="Gravity Fitness Club in Bibwewadi, Pune. Premium gym with strength training, yoga, zumba, dance, aerobics & personal training. Join from ₹1,600/month." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      background: #0A0A0A;
+      color: #EFEFEF;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    :root {
+      --bg: #0A0A0A;
+      --surface: #141414;
+      --surface2: #1C1C1C;
+      --lime: #C6F135;
+      --lime-dim: rgba(198,241,53,0.12);
+      --lime-glow: rgba(198,241,53,0.3);
+      --cream: #F5F0E8;
+      --text: #EFEFEF;
+      --muted: #888888;
+      --border: rgba(255,255,255,0.07);
+      --max-w: 1280px;
+      --pad: clamp(1.5rem, 5vw, 5rem);
+    }
+
+    /* ========================
+       CUSTOM CURSOR
+    ======================== */
+    #cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: var(--lime);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s, opacity 0.2s;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 1.5px solid rgba(198,241,53,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s cubic-bezier(0.16,1,0.3,1),
+                  height 0.4s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.3s;
+    }
+    body.hovering #cursor { width: 6px; height: 6px; }
+    body.hovering #cursor-ring { width: 60px; height: 60px; border-color: var(--lime); }
+    body.clicking #cursor { transform: translate(-50%,-50%) scale(0.6); }
+
+    /* ========================
+       NOISE OVERLAY
+    ======================== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    /* ========================
+       TOP URGENCY BANNER
+    ======================== */
+    #urgency-banner {
+      background: var(--lime);
+      color: #000;
+      text-align: center;
+      padding: 0.65rem var(--pad);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      position: relative;
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      animation: bannerPulse 3s ease infinite;
+    }
+    .banner-dot {
+      width: 8px; height: 8px;
+      background: #000;
+      border-radius: 50%;
+      display: inline-block;
+      animation: blink 1s ease infinite;
+    }
+    #urgency-banner button {
+      position: absolute;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: none;
+      color: #000;
+      opacity: 0.6;
+      font-weight: 700;
+      line-height: 1;
+    }
+    @keyframes bannerPulse {
+      0%, 100% { background: var(--lime); }
+      50% { background: #d4ff45; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* ========================
+       NAVBAR
+    ======================== */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      padding: 1.5rem var(--pad);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s, padding 0.4s;
+    }
+    #navbar.scrolled {
+      background: rgba(10,10,10,0.94);
+      backdrop-filter: blur(20px);
+      padding: 1rem var(--pad);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--lime); }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .nav-links a {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--lime);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-cta {
+      background: var(--lime) !important;
+      color: #000 !important;
+      padding: 0.55em 1.4em !important;
+      font-weight: 700 !important;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.15);
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+    }
+    .nav-cta:hover::before { transform: translateX(0); }
+    .nav-cta::after { display: none !important; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: none;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 2px;
+      background: var(--text);
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0A0A0A;
+      z-index: 998;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      color: var(--text);
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--lime); }
+
+    /* ========================
+       HERO
+    ======================== */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(198,241,53,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 80% at 10% 80%, rgba(198,241,53,0.04) 0%, transparent 50%),
+        linear-gradient(135deg, #0A0A0A 0%, #111111 50%, #0D0D0D 100%);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(198,241,53,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(198,241,53,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+      transition: background-position 0.1s linear;
+    }
+    /* Parallax layers */
+    #parallax-1, #parallax-2 {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+    }
+    .orb-1 {
+      width: 400px; height: 400px;
+      background: rgba(198,241,53,0.05);
+      top: 20%; left: 60%;
+    }
+    .orb-2 {
+      width: 250px; height: 250px;
+      background: rgba(198,241,53,0.04);
+      bottom: 20%; left: 10%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding-top: 8rem;
+    }
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.3s forwards;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      background: var(--lime);
+      border-radius: 50%;
+      animation: blink 1.5s ease infinite;
+    }
+    /* SPLIT TEXT HERO */
+    .hero-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(5rem, 14vw, 13rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .hero-title .line {
+      display: block;
+      overflow: hidden;
+    }
+    .hero-title .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(100%);
+      animation: wordReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .hero-title .line:nth-child(1) .word { animation-delay: 0.4s; }
+    .hero-title .line:nth-child(2) .word { animation-delay: 0.6s; color: var(--lime); }
+    @keyframes wordReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      max-width: 42ch;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.9s forwards;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 1.1s forwards;
+    }
+
+    /* MAGNETIC BUTTONS */
+    .btn-primary {
+      background: var(--lime);
+      color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 1em 2.2em;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.1s;
+      will-change: transform;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.12);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 12px 40px rgba(198,241,53,0.45), 0 0 0 1px rgba(198,241,53,0.3);
+    }
+    .btn-primary:hover::after { transform: scaleX(1); transform-origin: left; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 1em 2.2em;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, color 0.3s, transform 0.1s;
+      will-change: transform;
+    }
+    .btn-ghost::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--lime);
+      transform: translateY(101%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: -1;
+    }
+    .btn-ghost:hover {
+      border-color: var(--lime);
+      color: #000;
+    }
+    .btn-ghost:hover::before { transform: translateY(0); }
+
+    .hero-stats {
+      display: flex;
+      gap: clamp(2rem, 5vw, 4rem);
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 1.3s forwards;
+    }
+    .stat-number {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      color: var(--lime);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+    .hero-deco {
+      position: absolute;
+      right: -5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: clamp(280px, 45vw, 600px);
+      height: clamp(280px, 45vw, 600px);
+      border-radius: 50%;
+      border: 1px solid rgba(198,241,53,0.08);
+      z-index: 1;
+      animation: rotateSlow 30s linear infinite;
+    }
+    .hero-deco::before {
+      content: '';
+      position: absolute;
+      inset: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(198,241,53,0.06);
+    }
+    .hero-deco::after {
+      content: '';
+      position: absolute;
+      inset: 60px;
+      border-radius: 50%;
+      border: 1px solid rgba(198,241,53,0.04);
+      background: radial-gradient(circle, rgba(198,241,53,0.05) 0%, transparent 70%);
+    }
+    @keyframes rotateSlow {
+      to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    /* LIVE VIEWERS BADGE */
+    .live-badge {
+      position: absolute;
+      top: 2rem;
+      right: var(--pad);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 2s forwards;
+    }
+    .live-dot {
+      width: 8px; height: 8px;
+      background: #FF4444;
+      border-radius: 50%;
+      animation: blink 1s ease infinite;
+      flex-shrink: 0;
+    }
+    .live-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    #live-count { color: var(--lime); }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 1.8s forwards;
+      z-index: 2;
+    }
+    .scroll-indicator span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--lime), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    /* ========================
+       MARQUEE STRIP
+    ======================== */
+    .marquee-strip {
+      background: var(--lime);
+      padding: 0.85rem 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      animation: marqueeScroll 20s linear infinite;
+      width: max-content;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      color: #000;
+      white-space: nowrap;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .marquee-sep {
+      color: rgba(0,0,0,0.35);
+      font-size: 0.6rem;
+    }
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ========================
+       UTILITY
+    ======================== */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad); }
+    .lime { color: var(--lime); }
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--lime);
+      border: 1px solid var(--lime-glow);
+      padding: 0.3em 0.8em;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .section-heading {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.1;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .section-pad { padding: clamp(5rem, 10vw, 9rem) 0; }
+    .lime-line { width: 60px; height: 3px; background: var(--lime); margin: 2rem 0; }
+
+    /* ========================
+       ABOUT
+    ======================== */
+    #about { background: var(--surface); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-text p {
+      color: #BBBBBB;
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+    .about-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s;
+      transform-style: preserve-3d;
+    }
+    .about-card:hover { border-color: rgba(198,241,53,0.3); }
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 60px; height: 3px;
+      background: var(--lime);
+    }
+    .about-big-year {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(5rem, 10vw, 8rem);
+      color: rgba(198,241,53,0.1);
+      line-height: 1;
+      position: absolute;
+      top: 1.5rem; right: 2rem;
+      pointer-events: none; user-select: none;
+    }
+    .about-highlights { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem; }
+    .highlight-item { display: flex; gap: 1rem; align-items: flex-start; }
+    .highlight-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .highlight-text strong {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      display: block; margin-bottom: 0.2rem;
+    }
+    .highlight-text span { font-size: 0.9rem; color: var(--muted); }
+    .founder-badge {
+      display: flex; align-items: center; gap: 1rem;
+      margin-top: 2rem; padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .founder-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--lime-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', cursive; font-size: 1.4rem;
+      color: var(--lime);
+      border: 2px solid var(--lime-glow);
+      flex-shrink: 0;
+    }
+    .founder-info strong { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; display: block; }
+    .founder-info span { font-size: 0.8rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+    /* ========================
+       CLASSES — TILT CARDS
+    ======================== */
+    #classes { background: var(--bg); }
+    .classes-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3.5rem; gap: 2rem; flex-wrap: wrap;
+    }
+    .classes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+    }
+    .class-card {
+      background: var(--surface);
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s, transform 0.15s;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .class-card-inner { position: relative; z-index: 2; }
+    .class-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(198,241,53,0.08), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .class-card:hover::before { opacity: 1; }
+    .class-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--lime);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .class-card:hover::after { transform: scaleX(1); }
+    .class-card:hover { background: var(--surface2); }
+    .class-icon { font-size: 2.5rem; margin-bottom: 1.2rem; display: block; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .class-card:hover .class-icon { transform: scale(1.2) rotate(-5deg); }
+    .class-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .class-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+    .class-num {
+      position: absolute; top: 2rem; right: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; color: rgba(198,241,53,0.3); letter-spacing: 0.1em;
+    }
+    /* Hover reveal arrow */
+    .class-arrow {
+      position: absolute;
+      bottom: 1.5rem; right: 1.5rem;
+      width: 32px; height: 32px;
+      background: var(--lime);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: #000;
+      transform: translateY(10px) scale(0.8);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .class-card:hover .class-arrow { opacity: 1; transform: translateY(0) scale(1); }
+
+    /* ========================
+       AMENITIES
+    ======================== */
+    #amenities { background: var(--surface); }
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    .amenity-item {
+      background: var(--surface);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: background 0.3s, transform 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .amenity-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--lime-dim);
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .amenity-item:hover::before { transform: translateY(0); }
+    .amenity-item:hover .amenity-icon { transform: scale(1.3) rotate(10deg); }
+    .amenity-icon {
+      font-size: 2rem; margin-bottom: 0.8rem;
+      display: block; position: relative; z-index: 1;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .amenity-name { font-size: 0.9rem; color: var(--text); position: relative; z-index: 1; font-weight: 500; }
+    .amenities-quote {
+      margin-top: 3rem;
+      padding: 2rem 2.5rem;
+      background: var(--bg);
+      border-left: 3px solid var(--lime);
+    }
+    .amenities-quote p {
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--cream);
+      line-height: 1.65;
+    }
+    .amenities-quote cite {
+      display: block; margin-top: 0.8rem;
+      font-family: 'Space Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+      font-style: normal;
+    }
+
+    /* ========================
+       PRICING
+    ======================== */
+    #pricing { background: var(--bg); }
+    .pricing-header { text-align: center; margin-bottom: 3.5rem; }
+    .pricing-header p { color: var(--muted); margin-top: 1rem; font-size: 1rem; }
+
+    /* Urgency row */
+    .urgency-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .urgency-item {
+      background: rgba(255,68,68,0.1);
+      border: 1px solid rgba(255,68,68,0.3);
+      padding: 0.45rem 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: #FF8888;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .urgency-item.green {
+      background: var(--lime-dim);
+      border-color: var(--lime-glow);
+      color: var(--lime);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+    }
+    .plan-card {
+      background: var(--surface);
+      padding: 2.5rem 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .plan-card:hover { background: var(--surface2); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .plan-card.featured {
+      background: var(--surface2);
+      border: 2px solid var(--lime);
+      margin: -2px; z-index: 1;
+    }
+    .plan-card.featured:hover { background: #222; transform: translateY(-8px); }
+    .plan-badge {
+      background: var(--lime); color: #000;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.3em 0.8em;
+      display: inline-block; margin-bottom: 1.2rem; align-self: flex-start;
+    }
+    .plan-name { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+    .plan-price { font-family: 'Bebas Neue', cursive; font-size: clamp(3rem, 5vw, 3.8rem); letter-spacing: 0.02em; color: var(--text); line-height: 1; margin-bottom: 0.3rem; }
+    .plan-price span { font-size: 0.45em; vertical-align: super; color: var(--lime); font-family: 'Space Mono', monospace; letter-spacing: 0; }
+    .plan-period { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .plan-spots {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: #FF8888;
+      margin-bottom: 1rem;
+    }
+    .plan-spots.safe { color: var(--lime); }
+    .plan-tagline { font-size: 0.85rem; color: #AAAAAA; margin-bottom: 2rem; line-height: 1.5; flex: 1; }
+    .plan-cta {
+      display: block; text-align: center;
+      padding: 0.85em 1.5em;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700; font-size: 0.85rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text);
+      cursor: none;
+      transition: all 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .plan-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(198,241,53,0.08);
+      transform: translateX(-100%);
+      transition: transform 0.4s;
+    }
+    .plan-cta:hover::before { transform: translateX(0); }
+    .plan-cta:hover { border-color: var(--lime); color: var(--lime); }
+    .plan-card.featured .plan-cta { background: var(--lime); border-color: var(--lime); color: #000; }
+    .plan-card.featured .plan-cta::before { background: rgba(0,0,0,0.12); }
+    .plan-card.featured .plan-cta:hover { background: #d4ff45; }
+
+    .pt-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 2rem; margin-top: 1.5px; flex-wrap: wrap;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .pt-card:hover { background: var(--surface2); border-color: rgba(198,241,53,0.2); }
+    .pt-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 0.3rem; }
+    .pt-desc { font-size: 0.9rem; color: var(--muted); }
+    .pt-price { font-family: 'Bebas Neue', cursive; font-size: 3rem; color: var(--lime); white-space: nowrap; }
+    .payment-row { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .payment-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .payment-badge {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 0.4em 1em; font-family: 'Space Mono', monospace;
+      font-size: 0.75rem; color: var(--text);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .payment-badge:hover { border-color: var(--lime); color: var(--lime); }
+
+    /* ========================
+       TIMINGS
+    ======================== */
+    #timings { background: var(--surface); }
+    .timings-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: var(--border); margin-top: 3rem; }
+    .timing-card { background: var(--surface); padding: 3rem 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+    .timing-card:hover { background: var(--surface2); }
+    .timing-card.primary::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--lime); }
+    .timing-day { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .timing-hours { font-family: 'Bebas Neue', cursive; font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--text); line-height: 1.1; letter-spacing: 0.02em; }
+    .timing-hours .accent { color: var(--lime); }
+    .timing-note { margin-top: 1.5rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .timing-bg-text { position: absolute; bottom: 1rem; right: 2rem; font-family: 'Bebas Neue', cursive; font-size: 8rem; color: rgba(255,255,255,0.025); line-height: 1; pointer-events: none; user-select: none; }
+
+    /* ========================
+       TESTIMONIALS
+    ======================== */
+    #testimonials { background: var(--bg); overflow: hidden; }
+    .ratings-row { display: flex; gap: 2rem; margin-bottom: 3rem; flex-wrap: wrap; }
+    .rating-badge {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .rating-badge:hover { border-color: rgba(198,241,53,0.3); transform: translateY(-3px); }
+    .rating-stars { font-size: 1.1rem; color: #F5C518; }
+    .rating-info strong { font-family: 'Bebas Neue', cursive; font-size: 1.5rem; color: var(--text); display: block; line-height: 1; }
+    .rating-info span { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+    /* Progress bar ratings */
+    .rating-progress {
+      display: flex; flex-direction: column; gap: 0.6rem;
+      margin-bottom: 3rem;
+    }
+    .rating-bar-row {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .rating-bar-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      width: 80px; flex-shrink: 0;
+    }
+    .rating-bar-track {
+      flex: 1; height: 3px;
+      background: var(--border);
+      position: relative; overflow: hidden;
+    }
+    .rating-bar-fill {
+      position: absolute;
+      top: 0; left: 0; height: 100%;
+      background: var(--lime);
+      width: 0;
+      transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .rating-bar-fill.animated { width: var(--fill); }
+    .rating-bar-pct {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; color: var(--lime);
+      width: 40px; text-align: right; flex-shrink: 0;
+    }
+
+    .testimonials-scroll {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+    }
+    .testimonial-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      position: relative;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .testimonial-card:hover { background: var(--surface2); transform: translateY(-4px); }
+    .testimonial-card::before {
+      content: '"';
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-family: 'Bebas Neue', cursive; font-size: 6rem;
+      color: rgba(198,241,53,0.08); line-height: 1;
+      pointer-events: none;
+    }
+    .testimonial-text { font-size: 0.95rem; color: #CCCCCC; line-height: 1.7; margin-bottom: 1.5rem; }
+    .testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+    .author-initial {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--lime-dim);
+      border: 1px solid var(--lime-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', cursive; font-size: 1rem; color: var(--lime);
+      flex-shrink: 0;
+    }
+    .author-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem; display: block; }
+    .author-source { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+    /* ========================
+       CONTACT
+    ======================== */
+    #contact { background: var(--surface); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+    .contact-detail { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem; }
+    .contact-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .contact-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.3rem; }
+    .contact-value { font-size: 0.95rem; color: var(--text); line-height: 1.5; }
+    .map-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--lime); color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700; font-size: 0.85rem;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 0.9em 1.8em; margin-top: 1rem;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      border: none; cursor: none;
+      position: relative; overflow: hidden;
+    }
+    .map-btn:hover { background: #d4ff45; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(198,241,53,0.35); }
+    .map-frame { border: 1px solid var(--border); overflow: hidden; transition: border-color 0.3s; }
+    .map-frame:hover { border-color: rgba(198,241,53,0.3); }
+    .map-frame iframe { width: 100%; height: 420px; display: block; filter: grayscale(80%) invert(90%) hue-rotate(180deg); opacity: 0.8; }
+
+    .contact-cta {
+      text-align: center; margin-top: 5rem;
+      padding: 4rem 2rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .contact-cta:hover { border-color: rgba(198,241,53,0.2); }
+    .contact-cta::before {
+      content: 'JOIN TODAY';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(5rem, 15vw, 12rem);
+      color: rgba(255,255,255,0.02);
+      white-space: nowrap;
+      pointer-events: none; user-select: none;
+      letter-spacing: 0.05em;
+    }
+    .contact-cta h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.5rem, 3vw, 2.2rem); margin-bottom: 1rem; position: relative; }
+    .contact-cta p { color: var(--muted); margin-bottom: 2rem; position: relative; }
+    .contact-cta .btn-primary { position: relative; }
+
+    /* ========================
+       FOOTER
+    ======================== */
+    footer { background: #050505; padding: 3rem 0; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
+    .footer-logo { font-family: 'Bebas Neue', cursive; font-size: 1.8rem; letter-spacing: 0.05em; }
+    .footer-logo span { color: var(--lime); }
+    .footer-tagline { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.85rem; color: var(--muted); transition: color 0.2s; letter-spacing: 0.05em; }
+    .footer-links a:hover { color: var(--lime); }
+    .footer-copy { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: rgba(136,136,136,0.5); text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+
+    /* ========================
+       FLOATING CTA BUTTON
+    ======================== */
+    #float-cta {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      z-index: 9990;
+      opacity: 0; pointer-events: none;
+      transform: translateY(20px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    #float-cta.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .float-btn {
+      background: var(--lime);
+      color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700; font-size: 0.85rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 1em 1.8em;
+      display: flex; align-items: center; gap: 0.5rem;
+      box-shadow: 0 8px 40px rgba(198,241,53,0.4);
+      animation: floatPulse 2s ease infinite;
+      cursor: none;
+      transition: background 0.2s;
+    }
+    .float-btn:hover { background: #d4ff45; animation-play-state: paused; }
+    @keyframes floatPulse {
+      0%, 100% { box-shadow: 0 8px 40px rgba(198,241,53,0.4); }
+      50% { box-shadow: 0 8px 60px rgba(198,241,53,0.65), 0 0 0 8px rgba(198,241,53,0.08); }
+    }
+
+    /* ========================
+       TOAST NOTIFICATIONS
+    ======================== */
+    #toast-container {
+      position: fixed;
+      bottom: 2rem; left: 2rem;
+      z-index: 9989;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--lime);
+      padding: 1rem 1.2rem;
+      max-width: 300px;
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      transform: translateX(-100%);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.5s;
+      pointer-events: all;
+    }
+    .toast.show { transform: translateX(0); opacity: 1; }
+    .toast.hide { transform: translateX(-120%); opacity: 0; }
+    .toast-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .toast-body {}
+    .toast-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .toast-msg { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+    /* ========================
+       CONFETTI (on CTA click)
+    ======================== */
+    .confetti-piece {
+      position: fixed;
+      width: 8px; height: 8px;
+      pointer-events: none;
+      z-index: 99999;
+      border-radius: 2px;
+      animation: confettiFall 1.2s ease forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--cx), var(--cy)) rotate(720deg); opacity: 0; }
+    }
+
+    /* ========================
+       ANIMATIONS
+    ======================== */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 1; height: 50px; }
+      50% { opacity: 0.3; height: 30px; }
+    }
+
+    /* ========================
+       RESPONSIVE
+    ======================== */
+    @media (max-width: 1024px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+      .amenities-grid { grid-template-columns: repeat(3, 1fr); }
+      .about-grid { gap: 3rem; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .about-grid { grid-template-columns: 1fr; }
+      .classes-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr 1fr; }
+      .amenities-grid { grid-template-columns: repeat(2, 1fr); }
+      .timings-inner { grid-template-columns: 1fr; }
+      .testimonials-scroll { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .hero-deco { display: none; }
+      .classes-header { flex-direction: column; align-items: flex-start; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+      body { cursor: auto; }
+      #cursor, #cursor-ring { display: none; }
+      #float-cta { bottom: 1rem; right: 1rem; }
+      #toast-container { left: 1rem; bottom: 5rem; max-width: calc(100vw - 2rem); }
+    }
+    @media (max-width: 480px) {
+      .classes-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .hero-ctas a { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CUSTOM CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- URGENCY BANNER -->
+  <div id="urgency-banner">
+    <span class="banner-dot"></span>
+    🔥 Limited Offer — Join This Month & Get Your First Week FREE · Starting ₹1,600 Only
+    <span class="banner-dot"></span>
+    <button onclick="this.parentElement.style.display='none'" aria-label="Close">×</button>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-logo">Gravity<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#classes">Classes</a></li>
+      <li><a href="#amenities">Amenities</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#contact" class="nav-cta">Join Now</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" class="mob-link">About</a>
+    <a href="#classes" class="mob-link">Classes</a>
+    <a href="#amenities" class="mob-link">Amenities</a>
+    <a href="#pricing" class="mob-link">Pricing</a>
+    <a href="#contact" class="mob-link">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid" id="heroGrid"></div>
+    <div id="parallax-1">
+      <div class="orb orb-1" data-speed="0.04"></div>
+      <div class="orb orb-2" data-speed="0.06"></div>
+    </div>
+    <div class="hero-deco"></div>
+
+    <!-- Live viewers badge -->
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      <span class="live-text"><span id="live-count">12</span> people viewing now</span>
+    </div>
+
+    <div class="container">
+      <div class="hero-content">
+        <p class="hero-eyebrow">
+          <span class="eyebrow-dot"></span>
+          📍 Bibwewadi, Pune — Est. 2010
+        </p>
+        <h1 class="hero-title">
+          <span class="line"><span class="word">DEFY</span></span>
+          <span class="line"><span class="word">GRAVITY.</span></span>
+        </h1>
+        <p class="hero-subtitle">Pune's Premier Fitness Community Since 2010. Train harder, move better, live stronger.</p>
+        <div class="hero-ctas">
+          <a href="#pricing" class="btn-primary magnetic" id="heroCta">🔥 Join Now — From ₹1,600</a>
+          <a href="#classes" class="btn-ghost magnetic">Explore Classes →</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number" data-target="15" data-suffix="+">0+</div>
+            <div class="stat-label">Years of Training</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" data-target="4.1" data-suffix="★" data-decimal="1">0★</div>
+            <div class="stat-label">Justdial Rating</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" data-target="1289" data-suffix="+">0+</div>
+            <div class="stat-label">Happy Members</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE STRIP -->
+  <div class="marquee-strip">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="marquee-item">🏋️ Strength Training <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">🧘 Yoga Classes <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">💃 Zumba <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">🏃 Aerobics <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">💪 Personal Training <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">🕺 Dance Classes <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">4.1★ Rated on Justdial <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">1,289+ Happy Members <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Since 2010 <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Join from ₹1,600/mo <span class="marquee-sep">✦</span></span>
+      <!-- Duplicate for seamless loop -->
+      <span class="marquee-item">🏋️ Strength Training <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">🧘 Yoga Classes <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">💃 Zumba <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">🏃 Aerobics <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">💪 Personal Training <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">🕺 Dance Classes <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">4.1★ Rated on Justdial <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">1,289+ Happy Members <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Since 2010 <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Join from ₹1,600/mo <span class="marquee-sep">✦</span></span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about" class="section-pad">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text fade-up">
+          <span class="tag">Our Story</span>
+          <h2 class="section-heading">Built by a Fitness Enthusiast.<br>For <span class="lime">Every Body.</span></h2>
+          <div class="lime-line"></div>
+          <p>Gravity Fitness Club was founded in 2010 by Mr. Sameet Gawand — a fitness enthusiast with a simple but powerful vision: create a space where anyone, regardless of age or ability, can pursue their best physical self.</p>
+          <p>Over 15 years, we've grown from a neighbourhood gym into Bibwewadi's most trusted fitness institution — with over 1,200 members who swear by our trainers, equipment, and welcoming atmosphere.</p>
+          <p>We believe fitness isn't a luxury. It's a lifestyle — and we make it accessible, sustainable, and genuinely enjoyable.</p>
+        </div>
+        <div class="about-visual fade-up" style="transition-delay:0.2s">
+          <div class="about-card tilt-card">
+            <div class="about-big-year">2010</div>
+            <div class="about-highlights">
+              <div class="highlight-item">
+                <span class="highlight-icon">🏆</span>
+                <div class="highlight-text">
+                  <strong>Trusted for 15 Years</strong>
+                  <span>One of Pune's longest-running independent gyms</span>
+                </div>
+              </div>
+              <div class="highlight-item">
+                <span class="highlight-icon">🤝</span>
+                <div class="highlight-text">
+                  <strong>Community First</strong>
+                  <span>A supportive, inclusive environment for every fitness level</span>
+                </div>
+              </div>
+              <div class="highlight-item">
+                <span class="highlight-icon">⚡</span>
+                <div class="highlight-text">
+                  <strong>Expert Trainers</strong>
+                  <span>Certified professionals dedicated to your progress</span>
+                </div>
+              </div>
+            </div>
+            <div class="founder-badge">
+              <div class="founder-avatar">SG</div>
+              <div class="founder-info">
+                <strong>Mr. Sameet Gawand</strong>
+                <span>Founder & Head Trainer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSES -->
+  <section id="classes" class="section-pad">
+    <div class="container">
+      <div class="classes-header fade-up">
+        <div>
+          <span class="tag">What We Offer</span>
+          <h2 class="section-heading">Train Your Way</h2>
+        </div>
+        <p style="color:var(--muted);max-width:32ch;font-size:0.95rem">Six disciplines. One destination. Whatever your goal — we've got a class for it.</p>
+      </div>
+      <div class="classes-grid fade-up" style="transition-delay:0.1s">
+        <div class="class-card">
+          <span class="class-num">01</span>
+          <div class="class-card-inner">
+            <span class="class-icon">🏋️</span>
+            <div class="class-name">Gym & Strength Training</div>
+            <div class="class-desc">Full access to premium equipment for hypertrophy, powerlifting, and functional strength.</div>
+          </div>
+          <div class="class-arrow">→</div>
+        </div>
+        <div class="class-card">
+          <span class="class-num">02</span>
+          <div class="class-card-inner">
+            <span class="class-icon">🧘</span>
+            <div class="class-name">Yoga</div>
+            <div class="class-desc">Flexibility, breath control, and mental calm — guided by experienced instructors.</div>
+          </div>
+          <div class="class-arrow">→</div>
+        </div>
+        <div class="class-card">
+          <span class="class-num">03</span>
+          <div class="class-card-inner">
+            <span class="class-icon">💃</span>
+            <div class="class-name">Zumba</div>
+            <div class="class-desc">High-energy dance workouts that burn calories and boost your mood simultaneously.</div>
+          </div>
+          <div class="class-arrow">→</div>
+        </div>
+        <div class="class-card">
+          <span class="class-num">04</span>
+          <div class="class-card-inner">
+            <span class="class-icon">🏃</span>
+            <div class="class-name">Aerobics</div>
+            <div class="class-desc">Cardio-focused group classes to improve stamina, heart health, and endurance.</div>
+          </div>
+          <div class="class-arrow">→</div>
+        </div>
+        <div class="class-card">
+          <span class="class-num">05</span>
+          <div class="class-card-inner">
+            <span class="class-icon">🕺</span>
+            <div class="class-name">Dance Classes</div>
+            <div class="class-desc">Learn choreography and move confidently — fun fitness for all skill levels.</div>
+          </div>
+          <div class="class-arrow">→</div>
+        </div>
+        <div class="class-card">
+          <span class="class-num">06</span>
+          <div class="class-card-inner">
+            <span class="class-icon">💪</span>
+            <div class="class-name">Personal Training</div>
+            <div class="class-desc">One-on-one attention with a certified trainer tailored to your specific goals.</div>
+          </div>
+          <div class="class-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AMENITIES -->
+  <section id="amenities" class="section-pad">
+    <div class="container">
+      <div class="fade-up">
+        <span class="tag">Facilities</span>
+        <h2 class="section-heading">Everything You Need,<br>Nothing You Don't.</h2>
+      </div>
+      <div class="amenities-grid fade-up" style="transition-delay:0.1s">
+        <div class="amenity-item"><span class="amenity-icon">❄️</span><div class="amenity-name">Air Conditioned</div></div>
+        <div class="amenity-item"><span class="amenity-icon">🎵</span><div class="amenity-name">Music System</div></div>
+        <div class="amenity-item"><span class="amenity-icon">🔒</span><div class="amenity-name">Locker Room</div></div>
+        <div class="amenity-item"><span class="amenity-icon">👕</span><div class="amenity-name">Changing Rooms</div></div>
+        <div class="amenity-item"><span class="amenity-icon">🅿️</span><div class="amenity-name">Free Parking</div></div>
+        <div class="amenity-item"><span class="amenity-icon">🔌</span><div class="amenity-name">Mobile Charging</div></div>
+        <div class="amenity-item"><span class="amenity-icon">🚿</span><div class="amenity-name">Hygiene Maintained</div></div>
+        <div class="amenity-item"><span class="amenity-icon">📶</span><div class="amenity-name">Wi-Fi Access</div></div>
+      </div>
+      <div class="amenities-quote fade-up" style="transition-delay:0.2s">
+        <p>"The equipment is well-maintained and the trainers are genuinely helpful. One of the cleanest gyms I've been to in Pune."</p>
+        <cite>— Verified Member Review · Justdial</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="section-pad">
+    <div class="container">
+      <div class="pricing-header fade-up">
+        <span class="tag">Membership Plans</span>
+        <h2 class="section-heading">Simple. Transparent. Affordable.</h2>
+        <p>No hidden charges. Pick a plan and start your journey today.</p>
+      </div>
+      <div class="urgency-row fade-up">
+        <div class="urgency-item">🔴 Only 7 spots left this month</div>
+        <div class="urgency-item green">✅ Instant activation on joining</div>
+        <div class="urgency-item">⏰ Offer ends soon</div>
+      </div>
+      <div class="pricing-grid fade-up" style="transition-delay:0.1s">
+        <div class="plan-card">
+          <div class="plan-name">Monthly</div>
+          <div class="plan-price"><span>₹</span>1,600</div>
+          <div class="plan-period">per month</div>
+          <div class="plan-spots">⚡ 4 spots remaining</div>
+          <div class="plan-tagline">Perfect for trying it out. No long-term commitment required.</div>
+          <a href="#contact" class="plan-cta magnetic">Get Started</a>
+        </div>
+        <div class="plan-card">
+          <div class="plan-name">Quarterly</div>
+          <div class="plan-price"><span>₹</span>3,500</div>
+          <div class="plan-period">per 3 months</div>
+          <div class="plan-spots safe">✅ Available now</div>
+          <div class="plan-tagline">A popular choice for those building a consistent routine.</div>
+          <a href="#contact" class="plan-cta magnetic">Get Started</a>
+        </div>
+        <div class="plan-card featured">
+          <div class="plan-badge">⭐ Best Value</div>
+          <div class="plan-name">Half-Yearly</div>
+          <div class="plan-price"><span>₹</span>5,500</div>
+          <div class="plan-period">per 6 months</div>
+          <div class="plan-spots">⚡ 3 spots remaining</div>
+          <div class="plan-tagline">Maximum savings with a commitment that matches your goals.</div>
+          <a href="#contact" class="plan-cta magnetic">Get Started</a>
+        </div>
+        <div class="plan-card">
+          <div class="plan-name">Annual</div>
+          <div class="plan-price"><span>₹</span>7,500</div>
+          <div class="plan-period">per year</div>
+          <div class="plan-spots safe">✅ Available now</div>
+          <div class="plan-tagline">Our best rate. For those fully committed to the lifestyle.</div>
+          <a href="#contact" class="plan-cta magnetic">Get Started</a>
+        </div>
+      </div>
+      <div class="pt-card fade-up" style="transition-delay:0.2s">
+        <div class="pt-info">
+          <div class="pt-title">💪 Personal Training Add-On</div>
+          <div class="pt-desc">One-on-one sessions with a certified trainer. Tailored programs, personalised attention, guaranteed results.</div>
+        </div>
+        <div class="pt-price">₹6,000</div>
+      </div>
+      <div class="payment-row fade-up" style="transition-delay:0.3s">
+        <span class="payment-label">We Accept</span>
+        <span class="payment-badge">📱 UPI</span>
+        <span class="payment-badge">💵 Cash</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMINGS -->
+  <section id="timings" class="section-pad">
+    <div class="container">
+      <div class="fade-up">
+        <span class="tag">Opening Hours</span>
+        <h2 class="section-heading">We're Open Early.<br>We Close Late.</h2>
+      </div>
+      <div class="timings-inner fade-up" style="transition-delay:0.1s">
+        <div class="timing-card primary">
+          <div class="timing-day">Monday — Saturday</div>
+          <div class="timing-hours"><span class="accent">05:00 AM</span><br>— 11:00 PM</div>
+          <div class="timing-note">18 hours of uninterrupted access. Morning warriors to late-night grinders — we've got you covered.</div>
+          <div class="timing-bg-text">MON</div>
+        </div>
+        <div class="timing-card">
+          <div class="timing-day">Sunday</div>
+          <div class="timing-hours">08:00 AM<br>— <span class="accent">02:00 PM</span></div>
+          <div class="timing-note">Rest days need love too. Get your session in, then enjoy your Sunday. <br><br><em style="font-size:0.8rem;color:var(--muted)">Extended hours may vary — call ahead to confirm.</em></div>
+          <div class="timing-bg-text">SUN</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" class="section-pad">
+    <div class="container">
+      <div class="fade-up">
+        <span class="tag">Member Reviews</span>
+        <h2 class="section-heading">1,289+ Members<br><span class="lime">Can't Be Wrong.</span></h2>
+      </div>
+      <div class="ratings-row fade-up" style="transition-delay:0.05s">
+        <div class="rating-badge">
+          <div class="rating-stars">★★★★☆</div>
+          <div class="rating-info"><strong>4.1 / 5</strong><span>Justdial Reviews</span></div>
+        </div>
+        <div class="rating-badge">
+          <div class="rating-stars">★★★★☆</div>
+          <div class="rating-info"><strong>4.0 / 5</strong><span>Growfitter Reviews</span></div>
+        </div>
+      </div>
+
+      <!-- Animated rating bars -->
+      <div class="rating-progress fade-up" style="transition-delay:0.1s">
+        <div class="rating-bar-row">
+          <span class="rating-bar-label">Equipment</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="--fill:92%"></div></div>
+          <span class="rating-bar-pct">92%</span>
+        </div>
+        <div class="rating-bar-row">
+          <span class="rating-bar-label">Cleanliness</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="--fill:88%"></div></div>
+          <span class="rating-bar-pct">88%</span>
+        </div>
+        <div class="rating-bar-row">
+          <span class="rating-bar-label">Trainers</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="--fill:80%"></div></div>
+          <span class="rating-bar-pct">80%</span>
+        </div>
+        <div class="rating-bar-row">
+          <span class="rating-bar-label">Community</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="--fill:95%"></div></div>
+          <span class="rating-bar-pct">95%</span>
+        </div>
+        <div class="rating-bar-row">
+          <span class="rating-bar-label">Value</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="--fill:90%"></div></div>
+          <span class="rating-bar-pct">90%</span>
+        </div>
+      </div>
+
+      <div class="testimonials-scroll fade-up" style="transition-delay:0.15s">
+        <div class="testimonial-card">
+          <p class="testimonial-text">"The equipment here is really well-maintained and the environment is always clean. The trainers push you at the right times and give you space when needed. Highly recommend for anyone serious about fitness."</p>
+          <div class="testimonial-author">
+            <div class="author-initial">R</div>
+            <div><span class="author-name">Rahul M.</span><span class="author-source">Justdial · ★★★★★</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-text">"Been going here for over 2 years. The trainers are incredibly friendly and actually care about your progress. Changing rooms are always clean. Best decision I made joining this gym."</p>
+          <div class="testimonial-author">
+            <div class="author-initial">P</div>
+            <div><span class="author-name">Priya K.</span><span class="author-source">Growfitter · ★★★★★</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-text">"What makes Gravity special is the community. It doesn't feel like a commercial gym — it feels like a place where people actually look out for each other. The zumba and aerobics classes are fantastic."</p>
+          <div class="testimonial-author">
+            <div class="author-initial">A</div>
+            <div><span class="author-name">Anita D.</span><span class="author-source">Justdial · ★★★★☆</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-text">"Affordable pricing, excellent trainers, and the gym is spotless. I've tried a few gyms in Bibwewadi and Gravity is hands down the best. Parking is convenient too — a big plus!"</p>
+          <div class="testimonial-author">
+            <div class="author-initial">S</div>
+            <div><span class="author-name">Suresh T.</span><span class="author-source">Google · ★★★★★</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section-pad">
+    <div class="container">
+      <div class="fade-up">
+        <span class="tag">Find Us</span>
+        <h2 class="section-heading">Come See Us<br>in <span class="lime">Bibwewadi.</span></h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info fade-up" style="transition-delay:0.1s">
+          <div class="contact-detail">
+            <span class="contact-icon">📍</span>
+            <div>
+              <div class="contact-label">Address</div>
+              <div class="contact-value">1st Floor, Kapil Upavan,<br>Chintamani Nagar, Near Lake Town,<br>Bibwewadi, Pune – 411037</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <span class="contact-icon">🕐</span>
+            <div>
+              <div class="contact-label">Hours</div>
+              <div class="contact-value">Mon–Sat: 5:00 AM – 11:00 PM<br>Sunday: 8:00 AM – 2:00 PM</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <span class="contact-icon">⭐</span>
+            <div>
+              <div class="contact-label">Rated On</div>
+              <div class="contact-value">Justdial · Growfitter · Google</div>
+            </div>
+          </div>
+          <a href="https://maps.google.com/?q=Gravity+Fitness+Club+Bibwewadi+Pune" target="_blank" class="map-btn magnetic">🗺️ Get Directions</a>
+        </div>
+        <div class="map-frame fade-up" style="transition-delay:0.2s">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3784.6!2d73.8672!3d18.4726!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDI4JzIxLjQiTiA3M8KwNTInMDIuMiJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+            allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Gravity Fitness Club Location">
+          </iframe>
+        </div>
+      </div>
+      <div class="contact-cta fade-up" style="transition-delay:0.3s">
+        <h3>Ready to Start Your Journey?</h3>
+        <p>Walk in anytime during operating hours — no appointment needed.</p>
+        <a href="https://maps.google.com/?q=Gravity+Fitness+Club+Bibwewadi+Pune" target="_blank" class="btn-primary confetti-btn magnetic">Join Today →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">Gravity<span>.</span></div>
+          <div class="footer-tagline">Defy Gravity. Every Day.</div>
+        </div>
+        <nav class="footer-links">
+          <a href="#about">About</a>
+          <a href="#classes">Classes</a>
+          <a href="#amenities">Amenities</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-copy">© 2025 Gravity Fitness Club, Bibwewadi, Pune. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- FLOATING CTA -->
+  <div id="float-cta">
+    <a href="#pricing" class="float-btn magnetic">⚡ Join Now · ₹1,600</a>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
+
+  <script>
+  // ============================================================
+  // CUSTOM CURSOR
+  // ============================================================
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  // Ring lag effect
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .class-card, .plan-card, .amenity-item, .testimonial-card, .rating-badge').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  });
+  document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
+  document.addEventListener('mouseup', () => document.body.classList.remove('clicking'));
+
+  // ============================================================
+  // PARALLAX — HERO
+  // ============================================================
+  document.addEventListener('mousemove', e => {
+    const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    const dx = (e.clientX - cx) / cx, dy = (e.clientY - cy) / cy;
+
+    document.querySelectorAll('.orb').forEach(orb => {
+      const speed = parseFloat(orb.dataset.speed || 0.04);
+      orb.style.transform = `translate(${dx * speed * 100}px, ${dy * speed * 100}px)`;
+    });
+
+    // Grid shift
+    const grid = document.getElementById('heroGrid');
+    if (grid) {
+      grid.style.backgroundPosition = `${dx * 8}px ${dy * 8}px`;
+    }
+  });
+
+  // ============================================================
+  // NAVBAR
+  // ============================================================
+  const navbar = document.getElementById('navbar');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const sections = document.querySelectorAll('section[id]');
+  const banner = document.getElementById('urgency-banner');
+  let bannerH = banner ? banner.offsetHeight : 0;
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
+  });
+
+  if (banner) {
+    navbar.style.top = bannerH + 'px';
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > bannerH) navbar.style.top = '0';
+    });
+  }
+
+  // ============================================================
+  // HAMBURGER
+  // ============================================================
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  });
+  document.querySelectorAll('.mob-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ============================================================
+  // SCROLL ANIMATIONS
+  // ============================================================
+  const fadeObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+  // Rating bars
+  const barObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.rating-bar-fill').forEach(bar => bar.classList.add('animated'));
+        barObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.rating-progress').forEach(el => barObserver.observe(el));
+
+  // ============================================================
+  // COUNTER ANIMATION
+  // ============================================================
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const decimal = parseInt(el.dataset.decimal || 0);
+    const duration = 1800;
+    const start = performance.now();
+    function update(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const val = target * ease;
+      el.textContent = (decimal > 0 ? val.toFixed(decimal) : Math.floor(val)) + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+  const counterObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target); counterObserver.unobserve(e.target); } });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+  // ============================================================
+  // MAGNETIC BUTTONS
+  // ============================================================
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) * 0.35;
+      const dy = (e.clientY - cy) * 0.35;
+      btn.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
+    });
+  });
+
+  // ============================================================
+  // CARD SPOTLIGHT (mouse-tracking gradient)
+  // ============================================================
+  document.querySelectorAll('.class-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mx', x + '%');
+      card.style.setProperty('--my', y + '%');
+    });
+  });
+
+  // ============================================================
+  // TILT CARDS
+  // ============================================================
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.width / 2, cy = rect.height / 2;
+      const dx = (e.clientX - rect.left - cx) / cx;
+      const dy = (e.clientY - rect.top - cy) / cy;
+      card.style.transform = `perspective(800px) rotateY(${dx * 6}deg) rotateX(${-dy * 6}deg) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // ============================================================
+  // FLOATING CTA — show on scroll
+  // ============================================================
+  const floatCta = document.getElementById('float-cta');
+  window.addEventListener('scroll', () => {
+    floatCta.classList.toggle('visible', window.scrollY > 600);
+  });
+
+  // ============================================================
+  // LIVE VIEWER COUNT — fluctuates randomly
+  // ============================================================
+  const liveCountEl = document.getElementById('live-count');
+  if (liveCountEl) {
+    let count = 12;
+    setInterval(() => {
+      const delta = Math.random() > 0.5 ? 1 : -1;
+      count = Math.max(8, Math.min(24, count + delta));
+      liveCountEl.textContent = count;
+    }, 4000);
+  }
+
+  // ============================================================
+  // TOAST NOTIFICATIONS
+  // ============================================================
+  const toastContainer = document.getElementById('toast-container');
+  const toasts = [
+    { icon: '🏃', title: 'Rahul just joined!', msg: 'Monthly plan · Bibwewadi' },
+    { icon: '💪', title: '3 spots left this week', msg: 'Half-Yearly plan filling fast' },
+    { icon: '⭐', title: 'New review posted', msg: '"Best gym in Bibwewadi!" — 5 stars' },
+    { icon: '🎉', title: 'Priya joined today', msg: 'Annual membership activated' },
+    { icon: '🔥', title: 'Hot offer active', msg: 'First week FREE this month only' },
+  ];
+  let toastIdx = 0;
+
+  function showToast(data) {
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<span class="toast-icon">${data.icon}</span><div class="toast-body"><div class="toast-title">${data.title}</div><div class="toast-msg">${data.msg}</div></div>`;
+    toastContainer.appendChild(el);
+    requestAnimationFrame(() => { requestAnimationFrame(() => el.classList.add('show')); });
+    setTimeout(() => {
+      el.classList.remove('show');
+      el.classList.add('hide');
+      setTimeout(() => el.remove(), 600);
+    }, 4500);
+  }
+
+  // Stagger initial toasts
+  setTimeout(() => showToast(toasts[0]), 3500);
+  setInterval(() => {
+    toastIdx = (toastIdx + 1) % toasts.length;
+    showToast(toasts[toastIdx]);
+  }, 8000);
+
+  // ============================================================
+  // CONFETTI on primary CTAs
+  // ============================================================
+  function launchConfetti(originX, originY) {
+    const colors = ['#C6F135', '#FFFFFF', '#000000', '#d4ff45', '#88CC00'];
+    for (let i = 0; i < 30; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const angle = (Math.random() * 360) * (Math.PI / 180);
+      const distance = 80 + Math.random() * 140;
+      const cx = Math.cos(angle) * distance;
+      const cy = Math.sin(angle) * distance - 60;
+      piece.style.cssText = `
+        left:${originX}px; top:${originY}px;
+        background:${colors[Math.floor(Math.random() * colors.length)]};
+        --cx:${cx}px; --cy:${cy}px;
+        width:${4 + Math.random() * 8}px;
+        height:${4 + Math.random() * 8}px;
+        animation-duration:${0.8 + Math.random() * 0.8}s;
+      `;
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 1600);
+    }
+  }
+
+  document.querySelectorAll('.confetti-btn, .plan-cta, #heroCta').forEach(btn => {
+    btn.addEventListener('click', e => {
+      launchConfetti(e.clientX, e.clientY);
+    });
+  });
+
+  // ============================================================
+  // SMOOTH SCROLL
+  // ============================================================
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+  </script>
+</body>
+</html>
